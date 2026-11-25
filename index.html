@@ -40,10 +40,24 @@ button{border:0;border-radius:10px;padding:11px 15px;font-weight:bold;cursor:poi
 @media(max-width:560px){.grid{grid-template-columns:1fr}.item{grid-template-columns:minmax(0,1.3fr) .55fr .9fr 34px;gap:5px}.item input{font-size:12px;padding:10px 6px}.remove{padding:9px 5px}.wrap{margin-top:14px}.panel{padding:14px}}
 @media print{body{background:white}.no-print,header,.panel.form-panel{display:none!important}.wrap{margin:0;padding:0}.panel{box-shadow:none;padding:0}.receipt{border:1px dashed #555;margin:0 auto;max-width:360px}}
 </style>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#54236f">
+<style>
+#jtSplash{position:fixed;inset:0;z-index:99999;background:#3d0759;display:flex;align-items:center;justify-content:center}
+#jtSplash img{width:100%;height:100%;object-fit:contain;background:#3d0759}
+#jtStart{position:absolute;left:22%;width:56%;height:10%;bottom:11%;border:0;border-radius:60px;background:transparent;color:transparent;cursor:pointer}
+#jtStart:focus-visible{outline:3px solid #fff}
+body.jt-waiting{overflow:hidden}
+</style>
 </head>
-<body>
+<body class="jt-waiting">
+<div id="jtSplash" aria-label="Splash screen JT Food">
+  <img src="splash.png" alt="JT Food - Pesan jadi lebih mudah dan cepat">
+  <button id="jtStart" type="button" aria-label="Mulai"></button>
+</div>
+
 <header><h1>JorTian Food</h1><p>Form Pembelian & Struk Digital</p></header>
 <div class="wrap">
 <section class="panel form-panel">
@@ -174,9 +188,14 @@ async function shareReceiptImage(){
 updateReceipt();
 </script>
 <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-}
+if ("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+</script>
+<script>
+document.getElementById("jtStart")?.addEventListener("click",()=>{
+  const splash=document.getElementById("jtSplash");
+  if(splash) splash.remove();
+  document.body.classList.remove("jt-waiting");
+});
 </script>
 </body>
 </html>

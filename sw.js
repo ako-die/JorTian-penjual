@@ -1,0 +1,5 @@
+const CACHE_NAME = "jt-food-penjual-v13";
+const FILES = ["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./splash.png"];
+self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(FILES))));
+self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("jt-food-")&&k!==CACHE_NAME).map(k=>caches.delete(k))))));
+self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request).then(r=>{const cp=r.clone();caches.open(CACHE_NAME).then(cache=>cache.put(e.request,cp));return r;}).catch(()=>caches.match("./index.html"))));});
